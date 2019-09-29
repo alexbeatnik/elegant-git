@@ -7,7 +7,7 @@ teardown() {
     clean-fake
 }
 
-@test "'accept-work': a work is accepted successfully for given remote branch" {
+@test "'accept-work': a work is accepted successfully for given origin remote branch" {
     fake-pass git "elegant obtain-work some __eg"
     fake-pass git "status"
     fake-pass git "rebase origin/master"
@@ -17,6 +17,23 @@ teardown() {
     fake-pass git "branch --delete --force __eg"
     fake-pass git "for-each-ref --format='%(upstream:short)' refs/heads/_eg}" "origin/some-work"
     fake-pass git "push origin --delete some-work"
+
+    check git-elegant accept-work some
+    [[ "$status" -eq 0 ]]
+}
+
+teardown() {
+    clean-fake
+}
+
+@test "'accept-work': a work is accepted successfully for given no origin remote branch" {
+    fake-pass git "elegant obtain-work some __eg"
+    fake-pass git "status"
+    fake-pass git "rebase feature/master"
+    fake-pass git "checkout master"
+    fake-pass git "merge --ff-only __eg"
+    fake-pass git "push feature master:master"
+    fake-pass git "branch --delete --force __eg"
 
     check git-elegant accept-work some
     [[ "$status" -eq 0 ]]
