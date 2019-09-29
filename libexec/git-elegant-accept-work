@@ -53,5 +53,8 @@ default() {
     git-verbose merge --ff-only ${WORK_BRANCH}
     git-verbose push ${REMOTE_NAME} ${MASTER}:${MASTER}
     git-verbose branch --delete --force ${WORK_BRANCH}
-    git-verbose push ${REMOTE_NAME} --delete $(branch-from-remote-reference ${ACTUAL_REMOTE})
+    if [[ ${REMOTE_NAME} == *"origin"* ]]; then
+      git-verbose push ${REMOTE_NAME} --delete $(branch-from-remote-reference ${ACTUAL_REMOTE})
+    fi
+
 }
